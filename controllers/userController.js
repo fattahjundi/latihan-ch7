@@ -33,7 +33,6 @@ function registerAdmin(req, res) {
 
     User.findByPk(currentUser.id)
     .then(user => {
-        console.log(user);
         if(user.role == 'super_admin') {
             User.create(rawData)
             .then(result => {
@@ -71,8 +70,7 @@ function login(req, res) {
         // jika user dan password valid
         const accessToken = jwt.sign({
             id: user.id,
-            username: user.username,
-            role: user.role
+            username: user.username
         }, rahasia)
 
         return res.json({
@@ -85,15 +83,18 @@ function login(req, res) {
 
 const whoami = (req, res) => {
     const currentUser = req.user
-    return res.json({
-        id: currentUser.id,
-        username: currentUser.username
-    }).catch(err => {
-        return res.json({
+    try {
+        res.json({
+            id: currentUser.id,
+            username: currentUser.username,
+            role: currentUser.role
+        })
+    } catch(err) {
+        res.json({
             status: 500,
             message: err
         })
-    })
+    }
 }
 
 module.exports = {

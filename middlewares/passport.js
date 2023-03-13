@@ -8,9 +8,7 @@ const option = {
 }
 
 passport.use(new JwtStrategy(option, (payload, done) => {
-    User.findOne({
-        where: {id: payload.id}
-    })
+    User.findByPk(payload.id)
     .then(user => done(null, user))
     .catch(err => done(err, false))
 }))
